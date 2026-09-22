@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday زوزتي ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #ff6b81;
+            --secondary-color: #ff758c;
+            --bg-color: #fff0f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .icon-lock {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #d63384;
+            font-size: 22px;
+        }
+
+        p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ffccd5;
+            border-radius: 10px;
+            outline: none;
+            text-align: center;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        input[type="password"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #ff6b81, #ff758c);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 107, 129, 0.4);
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 129, 0.6);
+        }
+
+        .error-msg {
+            color: #dc3545;
+            font-size: 13px;
+        }
+
+        .img-container {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid var(--primary-color);
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            margin: 0 auto;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .birthday-title {
+            font-size: 26px;
+            color: #ff3366;
+            margin-top: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .message {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            border-right: 4px solid var(--primary-color);
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- شاشة كلمة السر -->
+        <div id="loginCard" class="card">
+            <div class="icon-lock">🔒</div>
+            <h2>سر صغير لـ زوزتي بس ❤️</h2>
+            <p>اكتبي تاريخ ميلادك علشان تفتحي المفاجأة 😉</p>
+            <input type="password" id="passwordInput" placeholder="أدخلي كلمة السر" oninput="hideError()">
+            <button onclick="checkPassword()">افتحي المفاجأة ✨</button>
+            <p id="errorMsg" class="error-msg hidden">كلمة السر مش صح، جربي تاني يا حلوة! ❌</p>
+        </div>
+
+        <!-- شاشة التهنئة والمفاجأة -->
+        <div id="surpriseCard" class="card hidden">
+            <div class="img-container">
+                <img src="https://i.ibb.co/KzFKTbYb/IMG-20260812-WA0000.jpg" alt="Zozty">
+            </div>
+            <h1 class="birthday-title">كل سنة وأنتي طيبة يا زوزتي! 🎉❤️</h1>
+            <div class="message">
+                كل سنة وأنتي أجمل حاجة حصلت في حياتي، ربنا يخليكي ليا وتفضلي دايماً منورة دنيتي وبخير وابتسامتك الجميلة دي ما تفارقش وشك أبداً! 🥳✨
+            </div>
+            <audio id="bgMusic" controls loop>
+                <source src="https://server8.mp3quran.net/amr/Wayah.mp3" type="audio/mpeg">
+                المتصفح بتاعك مش بيدعم تشغيل الصوت.
+            </audio>
+        </div>
+    </div>
+
+    <script>
+        // تفعيل زر Enter لفتح المفاجأة
+        document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // إخفاء رسالة الخطأ عند بدء الكتابة من جديد
+        function hideError() {
+            document.getElementById('errorMsg').classList.add('hidden');
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (input === '2592007') {
+                document.getElementById('loginCard').classList.add('hidden');
+                document.getElementById('surpriseCard').classList.remove('hidden');
+                
+                // تشغيل الأغنية بعد تفاعل الضغط
+                const music = document.getElementById('bgMusic');
+                music.play().catch(e => console.log("Autoplay failed:", e));
+
+                // ألعاب نارية وبلالين الاحتفال
+                var count = 200;
+                var defaults = { origin: { y: 0.7 } };
+
+                function fire(particleRatio, opts) {
+                    confetti(Object.assign({}, defaults, opts, {
+                        particleCount: Math.floor(count * particleRatio)
+                    }));
+                }
+
+                fire(0.25, { spread: 26, startVelocity: 55 });
+                fire(0.2, { spread: 60 });
+                fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+                fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+                fire(0.1, { spread: 120, startVelocity: 45 });
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
